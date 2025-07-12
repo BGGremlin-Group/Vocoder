@@ -2,8 +2,8 @@
 set -e
 
 echo "================================================="
-echo " BGGG Vocoder - TOTAL AUTODEPLOY SCRIPT"
-echo " (No prompts. No bullshit. All-in-one.)"
+echo " BGGG Vocoder - TOTAL AUTO DEPLOY SCRIPT"
+echo " (No prompts. No bullshit. Fully automated.)"
 echo "================================================="
 
 sleep 1
@@ -35,7 +35,7 @@ done
 sleep 1
 
 ##############################
-# 2. Add .gitignore
+# 2. Write .gitignore
 ##############################
 echo ""
 echo "[INFO] Writing .gitignore..."
@@ -71,7 +71,7 @@ echo "[OK] .gitignore created"
 sleep 1
 
 ##############################
-# 3. Add manifest.txt
+# 3. Write manifest.txt
 ##############################
 echo ""
 echo "[INFO] Writing manifest.txt..."
@@ -164,7 +164,17 @@ git commit -m "Automated initial deploy" || echo "[OK] Nothing new to commit."
 sleep 1
 
 ##############################
-# 9. Create repo if missing
+# 9. Remove any existing origin
+##############################
+echo ""
+echo "[INFO] Cleaning any existing 'origin' remote..."
+git remote remove origin 2>/dev/null || true
+echo "[OK] Cleaned old remote."
+
+sleep 1
+
+##############################
+# 10. Create repo on GitHub if missing
 ##############################
 echo ""
 echo "[INFO] Checking if GitHub repo exists..."
@@ -172,30 +182,30 @@ if gh repo view "$GH_USER/$REPO_NAME" &>/dev/null; then
   echo "[OK] Repo exists on GitHub."
 else
   echo "[INFO] Repo does not exist. Creating..."
-  gh repo create "$GH_USER/$REPO_NAME" --private --source=. --remote=origin --push
+  gh repo create "$GH_USER/$REPO_NAME" --private --source=. --push
   echo "[OK] Repo created on GitHub."
 fi
 
 sleep 1
 
 ##############################
-# 10. Ensure correct remote
+# 11. Ensure correct remote origin
 ##############################
 echo ""
-echo "[INFO] Setting remote origin to $REMOTE_URL..."
+echo "[INFO] Setting remote 'origin' to $REMOTE_URL..."
 git remote remove origin 2>/dev/null || true
 git remote add origin "$REMOTE_URL"
-echo "[OK] Remote origin set"
+echo "[OK] Remote 'origin' is set."
 
 sleep 1
 
 ##############################
-# 11. Force Push
+# 12. Final Push
 ##############################
 echo ""
 echo "[INFO] Pushing to GitHub..."
 git push -u origin main --force
-echo "[OK] Pushed to GitHub"
+echo "[OK] Pushed to GitHub."
 
 echo ""
 echo "================================================="
