@@ -7,7 +7,6 @@ BGGG_Vocoder/
 │   ├── shape_predictor_68_face_landmarks.dat
 │   ├── shape_predictor_68_face_landmarks.dat.fallback
 │   ├── default_model.obj
-│   ├── waifu_mascot.obj
 │
 ├── themes/
 │   ├── web_ui.html
