@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>BGGG Vocoder V5.0 User Manual</title>
+  <style>
+    body {
+      background-color: #1A1A1A;
+      color: #00FFFF;
+      font-family: monospace;
+      margin: 0;
+      padding: 20px;
+    }
+    h1, h2, h3 {
+      border-bottom: 2px solid #00FFFF;
+      padding-bottom: 4px;
+      margin-top: 30px;
+    }
+    p {
+      line-height: 1.6;
+    }
+    code {
+      background-color: #111;
+      padding: 2px 4px;
+      border-radius: 4px;
+      color: #00FFAA;
+    }
+    ul {
+      margin-left: 20px;
+    }
+    pre {
+      background-color: #111;
+      padding: 10px;
+      overflow-x: auto;
+      border-radius: 4px;
+      color: #00FFAA;
+    }
+    a {
+      color: #00FFAA;
+      text-decoration: underline;
+    }
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid #00FFFF;
+      padding-top: 10px;
+      text-align: center;
+      color: #00AAAA;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>BGGG Vocoder V5.0 - User Manual</h1>
+  <p>
+    Welcome to the BGGG Vocoder V5.0 User Manual. This document provides thorough instructions for installing, configuring, and using the BGGG Vocoder application, developed by the BGGremlin Group.
+  </p>
+
+  <h2>1. Introduction</h2>
+  <p>
+    The BGGG Vocoder is an advanced, professional-grade audio processing and voice-cloning application. Designed for audio engineers, hackers, artists, and AI enthusiasts, it features real-time processing, few-shot voice cloning, noise reduction, visualization, and interactive GUI and Web UI components—all in a hacker-themed neon aesthetic inspired by ParrotOS.
+  </p>
+
+  <h2>2. System Requirements</h2>
+  <ul>
+    <li>Python 3.10 or higher recommended</li>
+    <li>OS: Linux, macOS, Windows</li>
+    <li>RAM: 8GB minimum (16GB+ recommended for voice cloning)</li>
+    <li>Optional GPU for faster TTS inference (CUDA-supported)</li>
+  </ul>
+
+  <h2>3. Installation</h2>
+  <p>
+    Install all dependencies using the provided <code>requirements.txt</code>:
+  </p>
+  <pre>pip install -r requirements.txt</pre>
+
+  <p>
+    Ensure you have <code>pyaudio</code> and audio drivers installed on your system. On Linux:
+  </p>
+  <pre>sudo apt install portaudio19-dev</pre>
+
+  <h2>4. Project Directory Structure</h2>
+  <p>The BGGG Vocoder expects this layout:</p>
+  <pre>
+BGGG_Vocoder/
+├── assets/
+│   ├── logo_screen.png
+│   ├── credits_screen.png
+│   ├── exit_screen.png
+│   ├── static_visualizer.png
+│   ├── shape_predictor_68_face_landmarks.dat
+│   ├── default_model.obj
+│   └── waifu_mascot.obj
+├── themes/
+│   ├── web_ui.html
+│   └── custom_theme.css
+├── voice_models/
+│   └── trained_voice_model.pt
+├── recordings/
+│   └── *.wav
+├── presets/
+│   ├── default_preset.json
+│   ├── russian_hacker_preset.json
+│   ├── fbi_informant_preset.json
+│   └── witness_protection_preset.json
+├── config/
+│   └── config.json
+├── docs/
+│   └── user_manual.html
+  </pre>
+
+  <h2>5. First Run</h2>
+  <p>
+    To start the program, run:
+  </p>
+  <pre>python main.py</pre>
+  <p>
+    On first run, the app will:
+  </p>
+  <ul>
+    <li>Create required folders if missing</li>
+    <li>Download the Dlib shape predictor if not present</li>
+    <li>Generate default Web UI HTML if missing</li>
+  </ul>
+
+  <h2>6. Features Overview</h2>
+  <ul>
+    <li>Few-shot voice cloning with Coqui-TTS and SpeechBrain embeddings</li>
+    <li>Prosody and style transfer between speakers</li>
+    <li>Real-time voice cloning adaptation during live streaming</li>
+    <li>Aggressive noise reduction with WebRTC VAD</li>
+    <li>Interactive visualizations (Spectrogram, Mel Spectrogram, 3D Waterfall, Particle Swarm)</li>
+    <li>Audio-reactive facial animation with landmark detection</li>
+    <li>Batch processing of multiple audio files</li>
+    <li>Full-featured PyQt5 GUI and Web UI</li>
+    <li>Custom themes with ParrotOS neon hacker aesthetic</li>
+  </ul>
+
+  <h2>7. Configuration</h2>
+  <p>
+    The application reads settings from <code>config/config.json</code> and from presets in <code>presets/</code>. Presets define:
+  </p>
+  <ul>
+    <li>Vocoder algorithm: phase, lpc, channel</li>
+    <li>Pitch shift (semitones)</li>
+    <li>Modulation index and rate</li>
+    <li>Volume scaling</li>
+    <li>Visualization mode</li>
+    <li>Voice cloning model path</li>
+    <li>Noise reduction aggressiveness</li>
+  </ul>
+
+  <p>
+    Example preset snippet:
+  </p>
+  <pre>
+{
+  "algorithm": "phase",
+  "pitch_shift": 0,
+  "modulation_index": 0.2,
+  "modulation_rate": 1.5,
+  "volume": 1.0
+}
+  </pre>
+
+  <h2>8. Using the GUI</h2>
+  <p>
+    The PyQt5 GUI provides:
+  </p>
+  <ul>
+    <li>Preset loading and saving</li>
+    <li>Real-time microphone input and output</li>
+    <li>Visualization selection and customization</li>
+    <li>Voice cloning model selection</li>
+    <li>Audio recording and batch processing</li>
+  </ul>
+
+  <h2>9. Using the Web UI</h2>
+  <p>
+    The Flask-powered Web UI lets you control processing remotely:
+  </p>
+  <ul>
+    <li>Update vocoder configuration live</li>
+    <li>Start/stop audio processing</li>
+    <li>Choose visualization modes</li>
+    <li>Adjust advanced parameters from any device on your network</li>
+  </ul>
+  <p>
+    To access the Web UI, navigate to:
+  </p>
+  <pre>http://localhost:5000</pre>
+
+  <h2>10. Customizing Themes</h2>
+  <p>
+    The app supports theming via <code>themes/web_ui.html</code> and <code>themes/custom_theme.css</code>. You can customize:
+  </p>
+  <ul>
+    <li>Font and color scheme (e.g. ParrotOS neon green/cyan)</li>
+    <li>Button styling and layout</li>
+    <li>Background images and assets</li>
+  </ul>
+
+  <h2>11. Assets Guide</h2>
+  <p>
+    Required files in <code>assets/</code>:
+  </p>
+  <ul>
+    <li><code>logo_screen.png</code>: Splash screen image</li>
+    <li><code>credits_screen.png</code>: Credits/about screen</li>
+    <li><code>exit_screen.png</code>: Exit/closing screen</li>
+    <li><code>static_visualizer.png</code>: Visualizer background</li>
+    <li><code>shape_predictor_68_face_landmarks.dat</code>: Dlib face landmark model (auto-downloaded)</li>
+    <li><code>default_model.obj</code>: 3D placeholder model</li>
+    <li><code>waifu_mascot.obj</code>: Custom 3D mascot model</li>
+  </ul>
+
+  <h2>12. Troubleshooting</h2>
+  <ul>
+    <li>Missing shape_predictor_68_face_landmarks.dat? App will attempt to auto-download.</li>
+    <li>No trained_voice_model.pt? Voice cloning will be disabled; use placeholders for testing.</li>
+    <li>Audio device errors? Check your microphone and output device settings.</li>
+    <li>Dependency errors? Verify Python version and install requirements.txt again.</li>
+  </ul>
+
+  <h2>13. License</h2>
+  <p>
+    MIT License. See LICENSE file for details.
+  </p>
+
+  <footer>
+    &copy; 2025 BGGremlin Group. All Rights Reserved.<br>
+    Developed with neon fury, encryption madness, and too much coffee.
+  </footer>
+</body>
+    </html>
