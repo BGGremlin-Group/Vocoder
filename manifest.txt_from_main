@@ -1,0 +1,15 @@
+# BGGG Vocoder V5.0 - Manifest
+
+assets/
+themes/
+voice_models/
+recordings/
+presets/
+config/
+docs/
+requirements.txt
+LICENSE
+README.md
+.gitignore
+manifest.txt
+main.py
