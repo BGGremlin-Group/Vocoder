@@ -1,4 +1,4 @@
-# BGGG Vocoder V5.0 - Project Manifest
+# BGGG Vocoder V5.0 - Manifest
 
 assets/
   - logo_screen.png
@@ -38,5 +38,5 @@ Root-level:
   - README.md
   - .gitignore
   - manifest.txt
-  - setup.sh / full_setup.sh
+  - ultimate_setup.sh
   - main.py
