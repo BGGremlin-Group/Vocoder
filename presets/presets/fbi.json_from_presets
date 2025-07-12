@@ -1,0 +1,45 @@
+{
+  "preset_name": "FBI Ahrnt",
+  "version": "5.0",
+  "description": "Clean, neutral, professional voice style for recording testimony with minimal vocoder artifacts.",
+  "author": "BGGremlin Group",
+  "date_created": "2025-07-12",
+
+  "vocoder_settings": {
+    "algorithm": "phase",
+    "pitch_shift": 0,
+    "modulation_index": 0.05,
+    "modulation_rate": 1.0,
+    "volume": 1.0
+  },
+
+  "visualization_settings": {
+    "visualization_mode": "Spectrogram",
+    "color_theme": "Federal Blue",
+    "enable_interactive_controls": false
+  },
+
+  "voice_cloning_settings": {
+    "enabled": true,
+    "voice_model_path": "voice_models/informant_model.pt",
+    "speaker_embedding": "fbi_informant",
+    "prosody_transfer": false,
+    "style_transfer": false,
+    "real_time_adaptation": false
+  },
+
+  "audio_processing": {
+    "noise_reduction": true,
+    "vad_aggressiveness": 1,
+    "latency_monitoring": true,
+    "dynamic_chunk_adjustment": false
+  },
+
+  "ui_preferences": {
+    "theme": "ParrotOS",
+    "splash_screen": "assets/logo_screen.png",
+    "exit_screen": "assets/exit_screen.png",
+    "credits_screen": "assets/credits_screen.png",
+    "static_visualizer": "assets/static_visualizer.png"
+  }
+}
