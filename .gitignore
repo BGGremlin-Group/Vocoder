@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environments
+venv/
+env/
+
+# User audio
+recordings/
+voice_models/trained_voice_model.pt
+assets/shape_predictor_68_face_landmarks.dat*
+
+# Keep folders but ignore contents except .gitkeep
+assets/*
+!assets/.gitkeep
+
+themes/*
+!themes/.gitkeep
+
+voice_models/*
+!voice_models/.gitkeep
+
+recordings/*
+!recordings/.gitkeep
+
+presets/*
+!presets/.gitkeep
+
+config/*
+!config/.gitkeep
+
+docs/*
+!docs/.gitkeep
+
+# System
+.DS_Store
+Thumbs.db

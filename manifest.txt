@@ -1,0 +1,42 @@
+# BGGG Vocoder V5.0 - Project Manifest
+
+assets/
+  - logo_screen.png
+  - credits_screen.png
+  - exit_screen.png
+  - static_visualizer.png
+  - shape_predictor_68_face_landmarks.dat
+  - shape_predictor_68_face_landmarks.dat.fallback
+  - default_model.obj
+  - waifu_mascot.obj
+
+themes/
+  - web_ui.html
+  - custom_theme.css
+
+voice_models/
+  - trained_voice_model.pt
+
+recordings/
+  - (your recorded .wav files here)
+
+presets/
+  - Default
+  - Spooky Russian
+  - FBI
+  - Witness Protection
+
+config/
+  - config.json
+
+docs/
+  - user_manual.html
+
+Root-level:
+  - requirements.txt
+  - LICENSE
+  - README.md
+  - .gitignore
+  - manifest.txt
+  - setup.sh / full_setup.sh
+  - main.py
