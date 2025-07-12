@@ -2,103 +2,137 @@
 set -e
 
 echo "================================================="
-echo " BGGG Vocoder - MIGRATION SCRIPT"
-echo " (Pulls from old repo, reorganizes, pushes)"
+echo " BGGG Vocoder - MIGRATE FROM VOCODER TO BGGG_VOCODER"
+echo " (Pulls all branches from Vocoder, pushes to BGGG_Vocoder)"
 echo "================================================="
 
 sleep 1
 
-##############################
-# 0. CONFIG (HARDCODED)
-##############################
-OLD_REPO_URL="https://github.com/BGGremlin-Group/BGGG_Vocoder.git"
-TEMP_CLONE_DIR="$HOME/temp_vocoder"
+################################
+# CONFIG
+################################
+SOURCE_REPO="https://github.com/BGGremlin-Group/Vocoder.git"
+DEST_REPO="https://github.com/BGGremlin-Group/BGGG_Vocoder.git"
+TEMP_DIR="$HOME/temp_vocoder_migration"
 
-echo "[INFO] Source old repo: $OLD_REPO_URL"
-echo "[INFO] Temp clone folder: $TEMP_CLONE_DIR"
+echo "[INFO] Source Repo: $SOURCE_REPO"
+echo "[INFO] Destination Repo: $DEST_REPO"
+echo "[INFO] Temp workspace: $TEMP_DIR"
 
 sleep 1
 
-##############################
-# 1. Clone old repo to temp
-##############################
+################################
+# Clean temp dir
+################################
 echo ""
-if [ -d "$TEMP_CLONE_DIR" ]; then
-  echo "[INFO] Removing existing temp clone..."
-  rm -rf "$TEMP_CLONE_DIR"
+if [ -d "$TEMP_DIR" ]; then
+  echo "[INFO] Removing old temp dir..."
+  rm -rf "$TEMP_DIR"
+fi
+mkdir -p "$TEMP_DIR"
+
+sleep 1
+
+################################
+# Define branches to pull
+################################
+BRANCHES=(main assets themes presets config docs voice_models)
+
+################################
+# Clone each branch of SOURCE
+################################
+for BR in "${BRANCHES[@]}"; do
+  echo ""
+  echo "============================="
+  echo "[INFO] Cloning branch: $BR FROM SOURCE REPO"
+  echo "============================="
+  git clone --depth=1 --branch="$BR" "$SOURCE_REPO" "$TEMP_DIR/$BR" || echo "  [WARN] Branch $BR may not exist."
+done
+
+sleep 1
+
+################################
+# Copy root-level files from SOURCE main
+################################
+echo ""
+echo "[INFO] Copying root-level files from SOURCE main..."
+MAIN_TEMP="$TEMP_DIR/main"
+if [ -d "$MAIN_TEMP" ]; then
+  cp -vu $MAIN_TEMP/*.py . || true
+  cp -vu $MAIN_TEMP/requirements.txt . || true
+  cp -vu $MAIN_TEMP/LICENSE . || true
+  cp -vu $MAIN_TEMP/README.md . || true
+  cp -vu $MAIN_TEMP/main.py . || true
+else
+  echo "[WARN] No main branch content found in SOURCE!"
 fi
 
-echo "[INFO] Cloning old repo..."
-git clone "$OLD_REPO_URL" "$TEMP_CLONE_DIR"
-echo "[OK] Clone complete."
-
 sleep 1
 
-##############################
-# 2. Copy root-level files
-##############################
+################################
+# Copy folder branches into DEST structure
+################################
 echo ""
-echo "[INFO] Copying root-level files..."
-cp -vu $TEMP_CLONE_DIR/*.py . || true
-cp -vu $TEMP_CLONE_DIR/requirements.txt . || true
-cp -vu $TEMP_CLONE_DIR/LICENSE . || true
-cp -vu $TEMP_CLONE_DIR/README.md . || true
-cp -vu $TEMP_CLONE_DIR/main.py . || true
-
-sleep 1
-
-##############################
-# 3. Copy folders into structured subfolders
-##############################
-echo ""
-echo "[INFO] Syncing folders..."
-
-function sync_folder() {
-  FROM="$TEMP_CLONE_DIR/$1"
-  TO="$1"
-  if [ -d "$FROM" ]; then
-    echo "  [OK] Copying $FROM --> $TO"
-    cp -ruv "$FROM/"* "$TO/" || echo "    [SKIP] Nothing to copy in $FROM"
+echo "[INFO] Copying branch folders into DESTINATION structure..."
+for SUB in assets themes presets config docs voice_models; do
+  SRC="$TEMP_DIR/$SUB"
+  DEST="./$SUB"
+  echo ""
+  echo ">>> Processing $SUB"
+  if [ -d "$SRC" ]; then
+    mkdir -p "$DEST"
+    cp -ruv "$SRC/"* "$DEST/" || echo "  [SKIP] Nothing to copy in $SUB branch."
   else
-    echo "  [SKIP] $FROM does not exist."
+    echo "  [SKIP] Branch $SUB did not exist or was empty in SOURCE."
   fi
-}
-
-sync_folder assets
-sync_folder themes
-sync_folder voice_models
-sync_folder recordings
-sync_folder presets
-sync_folder config
-sync_folder docs
+done
 
 sleep 1
 
-##############################
-# 4. Cleanup temp clone
-##############################
+################################
+# Ensure .gitkeep in all folders
+################################
 echo ""
-echo "[INFO] Removing temp clone..."
-rm -rf "$TEMP_CLONE_DIR"
-echo "[OK] Temp clone removed."
+echo "[INFO] Adding .gitkeep to ensure empty folders tracked..."
+ALL_FOLDERS=(assets themes presets config docs voice_models)
+for dir in "${ALL_FOLDERS[@]}"; do
+  mkdir -p "$dir"
+  touch "$dir/.gitkeep"
+  echo "  [OK] $dir/.gitkeep"
+done
 
 sleep 1
 
-##############################
-# 5. Stage, Commit, Push
-##############################
+################################
+# Clean up temp workspace
+################################
+echo ""
+echo "[INFO] Cleaning up temp folders..."
+rm -rf "$TEMP_DIR"
+echo "[OK] Temp workspace removed."
+
+sleep 1
+
+################################
+# Stage, Commit, Push to DESTINATION
+################################
 echo ""
 echo "[INFO] Staging all changes..."
 git add .
 
 echo "[INFO] Committing..."
-git commit -m "Migrated content from old repo into new structured layout" || echo "[OK] Nothing new to commit."
+git commit -m "Migrated content from original Vocoder repo" || echo "[OK] Nothing new to commit."
 
-echo "[INFO] Pushing to GitHub..."
+echo "[INFO] Pushing to BGGG_Vocoder (DESTINATION)..."
+git remote remove origin 2>/dev/null || true
+git remote add origin "$DEST_REPO"
 git push -u origin main --force
-echo "[OK] Pushed to GitHub."
+echo "[OK] Push complete to BGGG_Vocoder."
 
 echo ""
 echo "================================================="
-echo "✅ Migration Complete! Repo is up-to-date."
+echo "✅ Migration Complete!"
+echo "✅ SOURCE: $SOURCE_REPO"
+echo "✅ DESTINATION: $DEST_REPO"
+echo "✅ All branches merged into single main."
 echo "================================================="
