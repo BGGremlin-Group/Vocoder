@@ -38,5 +38,5 @@ Root-level:
   - README.md
   - .gitignore
   - manifest.txt
-  - ultimate_setup.sh
+  - ultimate_push_setup.sh
   - main.py
