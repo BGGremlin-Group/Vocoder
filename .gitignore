@@ -6,7 +6,6 @@ recordings/
 voice_models/trained_voice_model.pt
 assets/shape_predictor_68_face_landmarks.dat*
 
-# Keep folders with .gitkeep
 assets/*
 !assets/.gitkeep
 themes/*
